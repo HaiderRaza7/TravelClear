@@ -9,8 +9,8 @@ OPENTRIPMAP_API_KEY = "5ae2e3f221c38a28845f05b67fbd6206c69e2f737a4108db90894f98"
 OPENTRIPMAP_ENDPOINT = "https://api.opentripmap.com/0.1/en/places/bbox"
 
 app = Flask(__name__)
-@app.route('/', methods=['GET', 'POST'])
 
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         # Handle form submission
@@ -26,11 +26,13 @@ def travel_clear(location):
     params = {"q": location, "appid": OPENWEATHERMAP_API_KEY}
     response = requests.get(OPENWEATHERMAP_ENDPOINT, params=params)
     weather_data = response.json()
+    print("Weather data:", weather_data)
 
     # Use OpenTripMap API to get accommodations data
-    headers = {"x-api-key": OPENTRIPMAP_API_KEY}
-    response = requests.get(OPENTRIPMAP_ENDPOINT.format(location), headers=headers)
+    params = {"apikey": OPENTRIPMAP_API_KEY, "bbox": get_bbox(location)}
+    response = requests.get(OPENTRIPMAP_ENDPOINT, params=params)
     accommodations_data = response.json()
+    print("Accommodations data:", accommodations_data)
 
     # Convert JSON data to strings
     weather_str = jsonify(weather_data)
@@ -39,6 +41,18 @@ def travel_clear(location):
     # Return the string data
     return {"Weather data": weather_str, "Accommodations data": accommodations_str}
 
+
+def get_bbox(location):
+    # Use Nominatim API to get coordinates of the location
+    nominatim_endpoint = "https://nominatim.openstreetmap.org/search"
+    params = {"q": location, "format": "json"}
+    response = requests.get(nominatim_endpoint, params=params)
+    data = response.json()
+    lat = data[0]["lat"]
+    lon = data[0]["lon"]
+    # Calculate the bounding box
+    bbox = f"{float(lon)-0.5},{float(lat)-0.5},{float(lon)+0.5},{float(lat)+0.5}"
+    return bbox
 
 if __name__=="__main__":
     app.run(debug=True)
