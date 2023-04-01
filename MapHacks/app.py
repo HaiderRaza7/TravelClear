@@ -1,63 +1,46 @@
-from flask import Flask
+from flask import Flask, render_template, request, send_file, jsonify
 import requests
 
 # Set up API keys and endpoints
 OPENWEATHERMAP_API_KEY = "6b6c7dac6f7616e218d554848d9f56c1"
 OPENWEATHERMAP_ENDPOINT = "http://api.openweathermap.org/data/2.5/weather"
 
-TRIPADVISOR_API_KEY = "apify_api_fQIKIcGbnWKzOQI27corBbs2k1gGmp3YKKvk"
-TRIPADVISOR_ENDPOINT = "https://api.tripadvisor.com/api/partner/2.0/location/{}/attractions"
+OPENTRIPMAP_API_KEY = "5ae2e3f221c38a28845f05b67fbd6206c69e2f737a4108db90894f98"
+OPENTRIPMAP_ENDPOINT = "https://api.opentripmap.com/0.1/en/places/bbox"
 
-OPENAQ_ENDPOINT = "https://api.openaq.org/v1/latest"
-
-
-
-
+app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 
 def index():
     if request.method == 'POST':
         # Handle form submission
-        symbol = request.form['text_input'].upper()
+        location = request.form['text_input'].title()
+        data = travel_clear(location)
+        return render_template('index.html', data=data)
+    else:
+        return render_template('index.html')
 
-<form method="POST">
-      <label for="text_input">Enter a stock ticker symbol:</label>
-      <input type="text" name="text_input" id="text_input">
-      <button type="submit">Submit</button>
-    </form>
 
-def TravelClear():
-
-    # Set up the location you want to query
-    location = "New York"
-
+def travel_clear(location):
     # Use OpenWeatherMap API to get weather data
     params = {"q": location, "appid": OPENWEATHERMAP_API_KEY}
     response = requests.get(OPENWEATHERMAP_ENDPOINT, params=params)
     weather_data = response.json()
 
-    # Use TripAdvisor API to get tourist attractions and hotel/living cost
-    params = {"location_id": "g60763", "limit": "10"} # "g60763" is TripAdvisor's location ID for New York City
-    headers = {"x-api-key": TRIPADVISOR_API_KEY}
-    response = requests.get(TRIPADVISOR_ENDPOINT.format(location), params=params, headers=headers)
-    attractions_data = response.json()
+    # Use OpenTripMap API to get accommodations data
+    headers = {"x-api-key": OPENTRIPMAP_API_KEY}
+    response = requests.get(OPENTRIPMAP_ENDPOINT.format(location), headers=headers)
+    accommodations_data = response.json()
 
-    # Use OpenAQ API to get air pollution metrics
-    params = {"country": "US", "city": "New York"}
-    response = requests.get(OPENAQ_ENDPOINT, params=params)
-    air_data = response.json()
+    # Convert JSON data to strings
+    weather_str = jsonify(weather_data)
+    accommodations_str = jsonify(accommodations_data)
 
-    # Print the results
-    print("Weather data:", weather_data)
-    print("Tourist attractions and hotel/living cost data:", attractions_data)
-    print("Air pollution data:", air_data)
-    return "hello flask"
-
-
-
-
-
+    # Return the string data
+    return {"Weather data": weather_str, "Accommodations data": accommodations_str}
 
 
 if __name__=="__main__":
-    app.run()
+    app.run(debug=True)
+
+    
