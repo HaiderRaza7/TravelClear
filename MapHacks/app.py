@@ -9,7 +9,6 @@ OPENTRIPMAP_API_KEY = "5ae2e3f221c38a28845f05b67fbd6206c69e2f737a4108db90894f98"
 OPENTRIPMAP_ENDPOINT = "https://api.opentripmap.com/0.1/en/places/bbox"
 
 app = Flask(__name__)
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -18,7 +17,7 @@ def index():
         data = travel_clear(location)
         return render_template('index.html', data=data)
     else:
-        return render_template('index.html')
+        return render_template('index.html', error=True)
 
 
 def travel_clear(location):

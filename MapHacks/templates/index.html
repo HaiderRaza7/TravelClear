@@ -1,12 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>TravelClear</title>
+  <meta charset="UTF-8">
+  <title>TrackClear</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-	<form method="POST" action="/">
-		<input type="text" name="text_input" id="text_input">
-		<button type="submit">Submit</button>
-	</form>
-	<h1>TravelClear</h1>
-	
+  <nav class="nav-top">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+	  <div class="title"><h1>TrackClear</h1></div>
+  </nav>
+  <div class="container">
+    <br><br><br>
+    <form method="POST">
+      <label for="text_input">Enter a location:</label>
+      <input type="text" name="text_input" id="text_input">
+      <button type="submit">Submit</button>
+    </form>
+    {% if error %}
+    <h2>ERROR</h2>
+    {% endif %}
+    {% if data %}
+    <div class="output">
+		{{ data }}
+    </div>
+    {% endif %}
+  </div>
+
+  <footer id="defaultFooter">
+    <nav class="nav-footer">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+      <div class="copyright">&copy; 2023 TravelClear</div>
+    </nav>
+  </footer>
+  <script src="../js/script.js"></script>
+</body>
+</html>
