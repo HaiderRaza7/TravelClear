@@ -8,14 +8,12 @@ import openai
 OPENWEATHERMAP_API_KEY = "6b6c7dac6f7616e218d554848d9f56c1"
 OPENWEATHERMAP_ENDPOINT = "http://api.openweathermap.org/data/2.5/weather"
 
-# OPENTRIPMAP_API_KEY = "5ae2e3f221c38a28845f05b67fbd6206c69e2f737a4108db90894f98"
-# OPENTRIPMAP_ENDPOINT = "https://api.opentripmap.com/0.1/en/places/bbox"
+openai.api_key = "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"  # For running ChatGPT model
+model = "text-davinci-002"  # The ChatGPT model to use
 
 app = Flask(__name__)
 
-openai.api_key = "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"  # Do not alter!
-model = "text-davinci-002"  # The ChatGPT model to use
-
+# 100 of the most popular tourist attractions. Used to "surprise" the user with a random location
 cities = ['Paris', 'New York City', 'Rome', 'London', 'Dubai', 'Barcelona', 'Bangkok', 'Singapore', 'Istanbul',
           'Tokyo', 'Hong Kong', 'Amsterdam', 'Vienna', 'Prague', 'Los Angeles', 'Marrakesh', 'Shanghai', 'Berlin',
           'Madrid', 'Miami', 'Sydney', 'Florence', 'Buenos Aires', 'Toronto', 'San Francisco', 'Las Vegas',
@@ -32,6 +30,12 @@ cities = ['Paris', 'New York City', 'Rome', 'London', 'Dubai', 'Barcelona', 'Ban
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    """
+    This function is called when the user submits their location input (or if they click the Surprise me button).
+    It scrapes the web using open weather map API and utilizes openai API (chatGPT) to get important information about
+    the location's weather and popular tourist spots in addition to providing a brief introduction for the location.
+    :return: Weather and description about the location which is to be sent to index.html to be displayed to the user.
+    """
     if request.method == 'POST':
         if 'submit' in request.form:
             # Handle form submission
@@ -40,13 +44,18 @@ def index():
             location = random.choice(cities)
         else:
             return render_template('index.html', error=True)
-        data = travel_clear(location)
-        return render_template('index.html', weather=data[0], description=data[1])
+        description, tourist_spots, weather = travel_clear(location)
+        return render_template('index.html', description=description, tourist_spots=tourist_spots, weather=weather)
     else:
         return render_template('index.html', error=True)
 
 
 def travel_clear(location):
+    """
+    Extract the information that index() needs to do its job.
+    :param location: city that we need to obtain information about.
+    :return: Weather, description, and tourist spots about the location.
+    """
     # Use OpenWeatherMap API to get weather data
     params = {"q": location, "appid": OPENWEATHERMAP_API_KEY}
     response = requests.get(OPENWEATHERMAP_ENDPOINT, params=params)
@@ -56,8 +65,8 @@ def travel_clear(location):
     weather = f"The temperature in {location} is {temperature} degrees Celsius, and the weather is" \
               f" {weather_description}."
 
-    prompt = f'Please give a description of {location} with a quick description of its history and culture.' \
-             f' Please also give a list of tourist or famous spots to visit while visiting this location.'
+    prompt = f'Please give a description of the location, history, and culture of {location}.' \
+             f'You must complete sentences that you start.'
 
     response = openai.Completion.create(
         engine=model,
@@ -67,13 +76,28 @@ def travel_clear(location):
         stop=None,
         temperature=0.5,
     )
-
     description = response.choices[0].text
-    print(description)
-    return weather, description
+    description = description[:description.rindex('.') + 1]
+
+    prompt = f'Please give a list of tourist spots in {location}, but you must separate them with a comma. ' \
+             f'For example, if you would like to list 3 locations called A, B, and C then please output them ' \
+             f'exactly in this format: A,B,C.' \
+             f'You may list as many as you like as long as they are worth visiting.'
+
+    response = openai.Completion.create(
+        engine=model,
+        prompt=prompt,
+        max_tokens=100,
+        n=1,
+        stop=None,
+        temperature=0.5,
+    )
+    tourist_spots = response.choices[0].text.split(",")
+    for i in range(len(tourist_spots)):
+        tourist_spots[i] = tourist_spots[i].strip()
+
+    return description, tourist_spots, weather
 
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-    
