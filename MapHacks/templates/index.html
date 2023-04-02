@@ -25,9 +25,10 @@
     {% if error %}
     <h2>ERROR</h2>
     {% endif %}
-    {% if data %}
+    {% if description %}
     <div class="output">
-		{{ data }}
+		{{ description }} <br>
+        {{ weather }}
     </div>
     {% endif %}
   </div>
