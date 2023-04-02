@@ -72,6 +72,7 @@ def travel_clear(location):
 
     #, "Accommodations data": accommodations_str
 
+    accommodations_str = "you should see something about accommodations here"
     # Return the string data
     return {"Weather data": weather_str}
 
