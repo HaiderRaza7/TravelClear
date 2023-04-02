@@ -69,7 +69,7 @@ def travel_clear(location):
     # # Convert the accommodations information into a readable string format
     # accommodations_info = "\n".join(accommodations_info)
     # accommodations_str = f"Accommodations in {location}:\n{accommodations_info}"
-
+    accommodations_str = "you should see something about accommodations here"
     # Return the string data
     return {"Weather data": weather_str, "Accommodations data": accommodations_str}
 
