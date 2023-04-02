@@ -3,6 +3,7 @@ import requests
 import json
 import random
 import openai
+import time
 
 # Set up API keys and endpoints
 OPENWEATHERMAP_API_KEY = "6b6c7dac6f7616e218d554848d9f56c1"
@@ -48,6 +49,7 @@ def index():
 
 def travel_clear(location):
     # Use OpenWeatherMap API to get weather data
+    time.sleep(30)
     params = {"q": location, "appid": OPENWEATHERMAP_API_KEY}
     response = requests.get(OPENWEATHERMAP_ENDPOINT, params=params)
     weather_data = json.loads(response.text)
