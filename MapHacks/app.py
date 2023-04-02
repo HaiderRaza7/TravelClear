@@ -1,3 +1,5 @@
+import sys
+
 from flask import Flask, render_template, request
 import requests
 import json
@@ -102,4 +104,8 @@ def travel_clear(city):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Correct usage: openai API key should be the one and only argument")
+        exit(1)
+    openai.api_key = sys.argv[1]
     app.run(debug=True)

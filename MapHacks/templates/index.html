@@ -3,26 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>TrackClear</title>
-<!--  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">-->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <nav class="nav-top">
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-	  <div class="title"><h1>TrackClear</h1></div>
+  <div class="App">
+  <nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container-md">
+      <h1 class=".text-primary bg-white rounded mt-10">TravelClear</h1>
+    </div>
   </nav>
   <div class="container">
     <br><br><br>
+    <header class="App-header">
+      <h1 style="margin-top: -300px; margin-bottom: 50px;">TravelClear</h1>
     <form method="POST">
       <label for="text_input">Enter a city:</label>
-      <input type="text" name="text_input" id="text_input">
-      <button type="submit" name="submit" id="submit">Submit</button>
-	  <button type="submit" name="random" id="random">Surprise me!</button>
+      <div class="input_stuff">
+        <input type="text" name="text_input" id="text_input" placeholder="Enter a city">
+        <button class="btn btn-secondary fs-5" type="submit" name="submit" id="submit">Submit</button>
+        <button class="btn btn-secondary fs-5" type="submit" name="random" id="random">Surprise me!</button>
+      </div>
     </form>
-    {% if error %}
+      <br><br><br>
+      {% if error %}
     <h2>ERROR</h2>
     {% endif %}
     {% if description %}
@@ -34,17 +37,10 @@
       {{ weather }}
     </div>
     {% endif %}
-  </div>
+    </header>
 
-  <footer id="defaultFooter">
-    <nav class="nav-footer">
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact Us</a></li>
-      </ul>
-      <div class="copyright">&copy; 2023 TravelClear</div>
-    </nav>
-  </footer>
+  </div>
+</div>
+
 </body>
 </html>
