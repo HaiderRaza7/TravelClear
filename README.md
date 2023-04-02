@@ -6,6 +6,9 @@ When we heard about this weekend's theme of exploration, we all instantly though
 ## What it does
 After the user submits the name of the city they are currently considering planning a trip for, the python script receives this piece of information and uses various APIs to scrape the web for information about this city. If the user doesn't have any city in mind, then they could ask for a random city to be suggested (which the site gets from a preset list of 100 very popular tourist destinations).
 
+## How to use it
+After downloading the code, run app.py and then click on the link that appears in the console.
+
 ## How we built it
 This website was developed using HTML, CSS, React, and Python with the help of flask to integrate these technologies together. This website is also powered by ChatGPT and OpenWeatherMap through their respective APIs openai and OpenWeatherMap API.
 
