@@ -70,8 +70,10 @@ def travel_clear(location):
     # accommodations_info = "\n".join(accommodations_info)
     # accommodations_str = f"Accommodations in {location}:\n{accommodations_info}"
 
+    #, "Accommodations data": accommodations_str
+
     # Return the string data
-    return {"Weather data": weather_str, "Accommodations data": accommodations_str}
+    return {"Weather data": weather_str}
 
 
 # def get_bbox(location):
