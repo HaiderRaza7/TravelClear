@@ -1,4 +1,6 @@
 import sys
+from dotenv import load_dotenv
+import os 
 
 from flask import Flask, render_template, request
 import requests
@@ -7,11 +9,15 @@ import random
 import openai
 import time
 
+load_dotenv()
+
 # Set up API keys and endpoints
-OPENWEATHERMAP_API_KEY = "6b6c7dac6f7616e218d554848d9f56c1"
+OPENWEATHERMAP_API_KEY = os.getenv("OPENWEATHERMAP_API_KEY")
+openai.api_key = os.getenv("OPENAI_API_KEY")  # For running ChatGPT model
+
 OPENWEATHERMAP_ENDPOINT = "http://api.openweathermap.org/data/2.5/weather"
 
-openai.api_key = "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"  # For running ChatGPT model
+
 model = "text-davinci-002"  # The ChatGPT model to use
 
 app = Flask(__name__)
